@@ -1,0 +1,474 @@
+{
+	"info": {
+		"_postman_id": "d53c65a0-30ca-4cb6-9465-7adbe9d082db",
+		"name": "taskmanager-app-collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "create-user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d4b999bb-d793-4343-94b7-04d08c90c4fd",
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    pm.environment.set('authToken', pm.response.json().token)",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Mike\",\n    \"email\": \"mike@nodejs.com\",\n    \"password\": \"Computer@99\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login-user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8c48fe1e-1f13-4b75-85b5-f293a5432f6c",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    pm.environment.set('authToken', pm.response.json().token)",
+									"} else if (pm.response.code !== 200) {",
+									"    pm.environment.set('authToken', '');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"mickey@nodejs.com\",\n    \"password\": \"Computer@99\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/login",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload-user-avatar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/me/avatar",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove-user-avatar",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/me/avatar",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout-user-allsessions",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/users/logoutall",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"logoutall"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-users",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"Computer@99\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/me",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-user-profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/users/me",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout-user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/users/logout",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/users/me",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "create-task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Mike Task11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tasks",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-tasks-byid",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Mike Task 2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/tasks/5f590a1812225f1352d16e83",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tasks",
+								"5f590a1812225f1352d16e83"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/tasks",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-tasks-by-completed-status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/tasks?limit=10&skip=10",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "skip",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-tasks-byid",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/tasks/5f590a1812225f1352d16e83",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tasks",
+								"5f590a1812225f1352d16e83"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-tasks-byid",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/tasks/5f590a0712225f1352d16e82",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tasks",
+								"5f590a0712225f1352d16e82"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-task-by-pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/tasks?sortBy=completed_desc&sortBy=createdAt_desc",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "completed_desc"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt_desc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "healthcheck",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/health",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3dd12272-4b0a-4c16-b6a4-f10a4c5bb5a4",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "617fee76-73a5-4eda-aa7b-a8b2215ef072",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
