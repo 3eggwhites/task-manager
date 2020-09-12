@@ -105,3 +105,5 @@ dist
 
 # env variables
 local/
+basic-mongo-learning-task/
+playground/
