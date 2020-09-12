@@ -8,7 +8,7 @@ const userRouter = require('./routers/user-router');
 
 const app = express();
 
-const port = process.env.PORT || 4200;
+const port = process.env.PORT;
 
 // app.use((req, res, next) => {
 //     res.status(503).send('Services are unser maintenance');
