@@ -77,7 +77,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 userSchema.methods.generateAuthToken = async function () {
     const user = this;
-    const token = jwt.sign({ _id: user._id.toString() }, 'jwt-secret');
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
     user.tokens = user.tokens.concat({ token });
     await user.save();
     return token;
@@ -105,7 +105,7 @@ userSchema.virtual('tasks', {
 userSchema.pre('save', async function(next) {
     const user = this;
     if (user.isModified('password')) {
-        user.password = await bCrypt.hash(user.password, 'hash-rotation');
+        user.password = await bCrypt.hash(user.password, parseInt(process.env.HASH_ROTATION));
         // if password is changed we should log out user from all sessions
         user.tokens = [];
     }
