@@ -2,13 +2,14 @@ const request = require('supertest');
 const app = require('../src/expressapp');
 const mongoose = require('mongoose')
 
-const { userOneId, userOne, setupDatabase } = require('./fixtures/db');
+const { userOneId, userOne, userThree, setupDatabase } = require('./fixtures/db');
 const User = require('../src/models/user');
 
 beforeEach(setupDatabase);
 
 test('Should signup user', async () => {
-    const response = await request(app).post('/users').send({
+    const response = await request(app).post('/users')
+    .send({
         name: 'Ayan',
         email: 'ayan@lazydeveloper.dev',
         password: 'Testpass@345!'
@@ -31,7 +32,8 @@ test('Should signup user', async () => {
 });
 
 test('Should login existing user', async () => {
-    const response = await request(app).post('/users/login').send({
+    const response = await request(app).post('/users/login')
+    .send({
         email: userOne.email,
         password: userOne.password
     }).expect(200);
@@ -44,7 +46,8 @@ test('Should login existing user', async () => {
 });
 
 test('Should not login non-existing user', async () => {
-    await request(app).post('/users/login').send({
+    await request(app).post('/users/login')
+    .send({
         email: 'abc@def.com',
         password: userOne.password
     }).expect(400);
@@ -120,6 +123,47 @@ test('Should not allow user to update invalid fields', async ()=> {
     })
     .expect(400);
 });
+
+test('Should not signup user with invalid name/email/password', async () => {
+    const response = await request(app).post('/users')
+    .send({
+        name: 'Ayan',
+        email: 'ayanlazydeveloper.dev',
+        password: 'Testpass@345!'
+    }).expect(400);
+});
+
+test('Should not update user if unauthenticated', async () => {
+    await request(app).patch('/users/me')
+    .set('Authorization', `Bearer ${userThree.tokens[0].token}`)
+    .send({
+        name: 'updated'
+    }).expect(401);
+
+    const user = await User.findById(userThree._id);
+
+    // Assert details did not change in db
+    expect(user.name).not.toBe('updated')
+});
+
+test('Should not update user if unauthenticated', async ()=> {
+    await request(app).patch('/users/me')
+    .send({
+        name: 'UpdatedName',
+        age: 20
+    })
+    .expect(401);
+});
+
+test('Should not update user with invalid name/email/password', async ()=> {
+    await request(app).patch('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({
+        password: 'pass'
+    })
+    .expect(500);
+});
+
 
 afterAll(async () => {
     await mongoose.disconnect();
