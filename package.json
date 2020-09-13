@@ -10,7 +10,8 @@
     "watch:test": "env-cmd -f ./local/test.env jest --watch"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testTimeout": 60000
   },
   "repository": {
     "type": "git",
