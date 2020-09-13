@@ -1,25 +1,11 @@
 const request = require('supertest');
-const mongooes = require('mongoose');
-const jwt = require('jsonwebtoken');
 const app = require('../src/expressapp');
+const mongoose = require('mongoose')
+
+const { userOneId, userOne, setupDatabase } = require('./fixtures/db');
 const User = require('../src/models/user');
 
-
-const userOneId = new mongooes.Types.ObjectId();
-const userOne = {
-    _id: userOneId,
-    name: 'TestUser',
-    email: 'test@user.com',
-    password: 'whatthefish!',
-    tokens: [{
-        token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
-    }]
-}
-
-beforeEach(async ()=>{
-    await User.deleteMany();
-    await new User(userOne).save();
-});
+beforeEach(setupDatabase);
 
 test('Should signup user', async () => {
     const response = await request(app).post('/users').send({
@@ -93,4 +79,48 @@ test('Should not allow delete account to unauthenticated user', async () => {
     await request(app).delete('/users/me')
     .send()
     .expect(401);
+});
+
+test('Should upload profile pciture', async () => {
+    await request(app).post('/users/me/avatar')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .attach('avatar', 'tests/fixtures/profile-pic.jpeg')
+    .expect(200);
+
+    const user = await User.findById(userOneId);
+
+    // Asserting avatar data has buffer or not
+    expect(user.avatar.data).toEqual(expect.any(Buffer));
+});
+
+test('Should allow user to update valid fields', async ()=> {
+    const response = await request(app).patch('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({
+        name: 'UpdatedName',
+        age: 20
+    })
+    .expect(200);
+
+    const user = await User.findById(response.body.user._id);
+
+    // Asserting changes are recorded in database
+    expect(response.body.user).toMatchObject({
+        name: 'UpdatedName',
+        age: 20
+    });
+});
+
+test('Should not allow user to update invalid fields', async ()=> {
+    const response = await request(app).patch('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({
+        location: 'Home',
+        age: 20
+    })
+    .expect(400);
+});
+
+afterAll(async () => {
+    await mongoose.disconnect();
 });

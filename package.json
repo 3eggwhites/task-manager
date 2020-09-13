@@ -6,12 +6,12 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "env-cmd -f ./local/dev.env nodemon src/server.js",
-    "test": "env-cmd -f ./local/test.env jest",
-    "watch:test": "env-cmd -f ./local/test.env jest --watch"
+    "test": "env-cmd -f ./local/test.env jest --detectOpenHandles --runInBand",
+    "watch:test": "env-cmd -f ./local/test.env jest --detectOpenHandles --watch --runInBand"
   },
   "jest": {
     "testEnvironment": "node",
-    "testTimeout": 60000
+    "testTimeout": 180000
   },
   "repository": {
     "type": "git",

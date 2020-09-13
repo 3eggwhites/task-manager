@@ -91,7 +91,7 @@ router.patch('/users/me', auth, async (req,res) => {
             userToBeUpdated[property] = requestBody[property];
         });
         await userToBeUpdated.save();
-        res.send(userToBeUpdated);
+        res.send({user: userToBeUpdated});
     } catch (e) {
         res.status(500).send(e);
     }
