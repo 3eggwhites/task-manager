@@ -106,8 +106,6 @@ userSchema.pre('save', async function(next) {
     const user = this;
     if (user.isModified('password')) {
         user.password = await bCrypt.hash(user.password, parseInt(process.env.HASH_ROTATION));
-        // if password is changed we should log out user from all sessions
-        user.tokens = [];
     }
     next();
 });

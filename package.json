@@ -5,7 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "env-cmd -f ./local/local.env nodemon src/server.js"
+    "dev": "env-cmd -f ./local/dev.env nodemon src/server.js",
+    "test": "env-cmd -f ./local/test.env jest --detectOpenHandles --runInBand",
+    "watch:test": "env-cmd -f ./local/test.env jest --detectOpenHandles --watch --runInBand"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 180000
   },
   "repository": {
     "type": "git",
@@ -31,6 +37,8 @@
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",
-    "nodemon": "^2.0.4"
+    "jest": "^26.4.2",
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
   }
 }
